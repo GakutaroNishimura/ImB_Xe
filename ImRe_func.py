@@ -62,13 +62,16 @@ def Re_B(E):
 
 
 # Omega is in [Hz]
-def Omega(E):
+def Omega_pseud(E):
     iRe_B = Re_B(E)
     iRe_B = iRe_B/10**15
     return ((2*np.pi*const.h_bar*const.num_129*const.c**2)/const.m_N)*iRe_B
 
+def Omega_zero(B_0):
+    return -const.mu_N*B_0/(2*const.h_bar)
+
 def B_pseudo(E):
-    iOmega = Omega(E)
+    iOmega = Omega_pseud(E)
     return const.h_bar*iOmega/(2*const.mu_N)
 
 def Omega_prime(E, B_0, Pol129):
@@ -87,7 +90,7 @@ def Transmission(E, Pol129):
 
 
 def Poln_nonE():
-    return -math.tanh(const.p_He*const.rho_d_n*const.dSigma_He)
+    return -math.tanh(const.p_He*const.rho_d_He*const.dSigma_He)
 
 def Poln(E):
     p0 = 639.2
@@ -95,8 +98,8 @@ def Poln(E):
     p2 = 4.636
     p3 = -0.1133
     dSigma_He = (p0 + p1*E + p2*E**2 + p3*E**3)/10**28
-    #return -math.tanh(const.p_He*const.rho_d_n*const.dSigma_He)
-    return -math.tanh(const.p_He*const.rho_d_n*dSigma_He)
+    #return -math.tanh(const.p_He*const.rho_d_He*const.dSigma_He)
+    return -math.tanh(const.p_He*const.rho_d_He*dSigma_He)
 
 def Tasymm(E, Pol129):
     iIm_B = sigma_B(E, Pol129)
@@ -110,3 +113,14 @@ def He_sigma_A(E):
     Gamma_He = nGamma_He + const.Gammagamma_He
     k = 0.6947*np.sqrt(E*10**3)*10**10
     return 10**28*(-(np.pi/(2*k**2))*(nGamma_He*(2*k*(E-const.E_He)*const.R_He-Gamma_He/2)/((E-const.E_He)**2+(Gamma_He/2)**2)) + np.pi*const.R_He**2)
+
+
+def Tasymm_analyzer(E, Pol129, B_0):
+    t_in_cell = const.d_cell/(437.4*math.sqrt(E*10**3))
+    iIm_B = sigma_B(E, Pol129)
+    iIm_B = iIm_B/10**28
+    iHe_sigma = He_sigma_A(E)
+    iHe_sigma = iHe_sigma/10**28
+    iOmega_pseud = Pol129*Omega_pseud(E)
+    iOmega_zero = Omega_zero(B_0)
+    return math.tanh(const.num_129*iIm_B*const.d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
