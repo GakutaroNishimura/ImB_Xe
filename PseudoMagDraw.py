@@ -6,19 +6,27 @@ import ImRe_func as func
 
 B_0 = 1.5*10**(-3) #[T]
 E_0 = 9.57 #[eV]
-Pol129 = 0.02
-x = np.linspace(10*10**(-3), 10.0, 10000)
+Pol129 = 0.01
+#x = np.linspace(10*10**(-3), 10.0, 10000)
+x = np.linspace(9.0, 10.0, 10000)
 iB = np.linspace(-0.1, 0.1, 10000)
 #x = np.linspace(8.2, 11.0, 10000)
 
-A_s = []
+A_s_enrich = []
+A_s_nat = []
 
 for ix in x:
-    iA_s = func.Tasymm_analyzer(ix, Pol129, B_0)
-    A_s.append(iA_s)
+    iA_s = func.Tasymm_analyzer(ix, Pol129, B_0, 1.0, 0.1)
+    A_s_enrich.append(iA_s)
+
+for ix in x:
+    iA_s = func.Tasymm_analyzer(ix, Pol129, B_0, 3.0*0.264, 0.05)
+    A_s_nat.append(iA_s)
+
 fig, ax = plt.subplots()
 #ax.plot(x, func.Omega_pseud(x), label="$\omega_p$ [Hz]")
-ax.plot(x, A_s)
+ax.plot(x, A_s_enrich, label="129 enrich : 1 atm 10 cm")
+ax.plot(x, A_s_nat, label="natural : 3 atm 5 cm")
 #ax.plot(x, func.B_pseudo(x), label="$B_p$ [T]")
 #ax.plot(iB, func.Omega_prime(E_0, iB, Pol129=0.01), label="$\omega_p'$ [Hz]")
 ax.set_xlabel("E [eV]")
