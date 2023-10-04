@@ -79,6 +79,10 @@ def Omega_prime(E, B_0, Pol129):
     iRe_B = iRe_B/10**15
     return ((2*np.pi*const.h_bar*const.num_129*const.c**2)/const.m_N)*(Pol129*iRe_B-(const.mu_N*const.m_N*B_0)/(4*np.pi*const.h_bar**2*const.num_129*const.c**2))
     
+def n_rotation(E, B_0, Pol129):
+    iOmega_prime = Omega_prime(E, B_0, Pol129)
+    t_in_cell = const.d_cell/(437.4*np.sqrt(E*10**3))
+    return (360/(2*np.pi))*iOmega_prime*t_in_cell
 
 def Transmission(E, Pol129):
     # cosh内のXe偏極率はDsigmaの中に含まれている.
@@ -129,6 +133,17 @@ def Tasymm_analyzer(E, Pol129, B_0, Xe_partial_pressure, Xe_d_cell):
     iIm_B = iIm_B/10**28
     iHe_sigma = He_total(E)
     iOmega_pseud = Pol129*Omega_pseud(E)
+    iOmega_zero = Omega_zero(B_0)
+    #return math.tanh(const.num_129*iIm_B*const.d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
+    return math.tanh(num_129*iIm_B*Xe_d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
+
+def Tasymm_analyzer_Opzero(E, Pol129, B_0, Xe_partial_pressure, Xe_d_cell):
+    num_129 = Xe_partial_pressure*5.88*10**3*6.02*10**23/131.3
+    t_in_cell = const.d_cell/(437.4*math.sqrt(E*10**3))
+    iIm_B = sigma_B(E, Pol129)
+    iIm_B = iIm_B/10**28
+    iHe_sigma = He_total(E)
+    iOmega_pseud = 0
     iOmega_zero = Omega_zero(B_0)
     #return math.tanh(const.num_129*iIm_B*const.d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
     return math.tanh(num_129*iIm_B*Xe_d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
