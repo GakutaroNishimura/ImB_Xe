@@ -62,10 +62,11 @@ def Re_B(E):
 
 
 # Omega is in [Hz]
-def Omega_pseud(E):
+def Omega_pseud(E, Xe_partial_pressure):
+    num_129 = Xe_partial_pressure*5.88*10**3*6.02*10**23/131.3
     iRe_B = Re_B(E)
     iRe_B = iRe_B/10**15
-    return ((2*np.pi*const.h_bar*const.num_129*const.c**2)/const.m_N)*iRe_B
+    return ((2*np.pi*const.h_bar*num_129*const.c**2)/const.m_N)*iRe_B
 
 def Omega_zero(B_0):
     return -const.mu_N*B_0/(2*const.h_bar)
@@ -126,6 +127,7 @@ def He_sigma_A(E):
     return 10**28*(-(np.pi/(2*k**2))*(nGamma_He*(2*k*(E-const.E_He)*const.R_He-Gamma_He/2)/((E-const.E_He)**2+(Gamma_He/2)**2)) + np.pi*const.R_He**2)
 
 
+"""
 def Tasymm_analyzer(E, Pol129, B_0, Xe_partial_pressure, Xe_d_cell):
     num_129 = Xe_partial_pressure*5.88*10**3*6.02*10**23/131.3
     t_in_cell = const.d_cell/(437.4*math.sqrt(E*10**3))
@@ -136,6 +138,16 @@ def Tasymm_analyzer(E, Pol129, B_0, Xe_partial_pressure, Xe_d_cell):
     iOmega_zero = Omega_zero(B_0)
     #return math.tanh(const.num_129*iIm_B*const.d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
     return math.tanh(num_129*iIm_B*Xe_d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
+"""
+
+def Tasymm_analyzer(E, Pol129, B_0, Xe_partial_pressure, Xe_d_cell):
+    t_in_cell = Xe_d_cell/(437.4*math.sqrt(E*10**3))
+    iHe_sigma = He_total(E)
+    iOmega_pseud = Pol129*Omega_pseud(E, Xe_partial_pressure)
+    iOmega_zero = Omega_zero(B_0)
+    #return math.tanh(const.num_129*iIm_B*const.d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
+    return math.tanh(const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
+
 
 def Tasymm_analyzer_Opzero(E, Pol129, B_0, Xe_partial_pressure, Xe_d_cell):
     num_129 = Xe_partial_pressure*5.88*10**3*6.02*10**23/131.3
