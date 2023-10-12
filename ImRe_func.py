@@ -82,6 +82,7 @@ def Omega_prime(E, B_0, Pol129):
     
 def n_rotation(E, B_0, Pol129):
     iOmega_prime = Omega_prime(E, B_0, Pol129)
+    #iOmega_prime = 0.01*Omega_pseud(E, 1.0)
     t_in_cell = const.d_cell/(437.4*np.sqrt(E*10**3))
     return (360/(2*np.pi))*iOmega_prime*t_in_cell
 
