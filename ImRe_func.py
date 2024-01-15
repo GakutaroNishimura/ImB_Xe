@@ -147,11 +147,13 @@ def Poln(E):
     return -math.tanh(const.p_He*const.rho_d_He*dSigma_He)
 
 def He_total(E):
-    p0 = 639.2
-    p1 = -71.97
-    p2 = 4.636
-    p3 = -0.1133
-    return (p0 + p1*E + p2*E**2 + p3*E**3)/10**28
+    # p0 = 639.2
+    # p1 = -71.97
+    # p2 = 4.636
+    # p3 = -0.1133
+    p0 = 854.0617248564827
+    # return (p0 + p1*E + p2*E**2 + p3*E**3)/10**28
+    return (p0/np.sqrt(E))/10**28 #Heの断面積を1/v則でフィッティング
 
 def Tasymm(E, Pol129):
     iIm_B = sigma_B(E, Pol129)
@@ -204,8 +206,9 @@ def Tasymm_analyzer_Opzero(E, Pol129, B_0, Xe_partial_pressure, Xe_d_cell):
 def Tasymm_analyzer2(E, PolXe, B_0, Xe_partial_pressure, Xe_d_cell):
     t_in_cell = Xe_d_cell/(437.4*math.sqrt(E*10**3))
     iHe_sigma = He_total(E)
-    # iOmega_pseud = PolXe*Omega_pseud(E, Xe_partial_pressure)
-    iOmega_pseud = PolXe*Omega_pseud131(E)
+    # iHe_sigma = 600.0/10**28
+    iOmega_pseud = PolXe*Omega_pseud(E, Xe_partial_pressure)
+    # iOmega_pseud = PolXe*Omega_pseud131(E)
     iOmega_zero = Omega_zero(B_0)
     #return math.tanh(const.num_129*iIm_B*const.d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
     return math.tanh(const.rho_d_He*const.p_He*iHe_sigma*iOmega_pseud*t_in_cell)*math.tanh(-const.rho_d_He*const.p_He*iHe_sigma*(1+iOmega_zero*t_in_cell))
