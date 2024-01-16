@@ -91,10 +91,11 @@ def Omega_pseud(E, Xe_partial_pressure):
     iRe_B = iRe_B/10**15
     return ((2*np.pi*const.h_bar*num_129*const.c**2)/const.m_N)*iRe_B
 
-def Omega_pseud131(E):
+def Omega_pseud131(E, Xe_partial_pressure):
+    num_131 = Xe_partial_pressure*5.88*10**3*6.02*10**23/131.3
     iRe_B = Re_B131(E)
     iRe_B = iRe_B/10**15
-    return ((2*np.pi*const.h_bar*const.num_131*const.c**2)/const.m_N)*iRe_B
+    return ((2*np.pi*const.h_bar*num_131*const.c**2)/const.m_N)*iRe_B
 
 def Omega_zero(B_0):
     return -const.mu_N*B_0/(2*const.h_bar)
@@ -206,9 +207,8 @@ def Tasymm_analyzer_Opzero(E, Pol129, B_0, Xe_partial_pressure, Xe_d_cell):
 def Tasymm_analyzer2(E, PolXe, B_0, Xe_partial_pressure, Xe_d_cell):
     t_in_cell = Xe_d_cell/(437.4*math.sqrt(E*10**3))
     iHe_sigma = He_total(E)
-    # iHe_sigma = 600.0/10**28
-    iOmega_pseud = PolXe*Omega_pseud(E, Xe_partial_pressure)
-    # iOmega_pseud = PolXe*Omega_pseud131(E)
+    # iOmega_pseud = PolXe*Omega_pseud(E, Xe_partial_pressure)
+    iOmega_pseud = PolXe*Omega_pseud131(E, Xe_partial_pressure)
     iOmega_zero = Omega_zero(B_0)
     #return math.tanh(const.num_129*iIm_B*const.d_cell + const.rho_d_He*const.p_He*iHe_sigma*math.sin(iOmega_pseud*t_in_cell)*math.sin(iOmega_zero*t_in_cell))*math.tanh(const.rho_d_He*const.p_He*iHe_sigma*(1 + math.cos(iOmega_pseud*t_in_cell)*math.cos(iOmega_zero*t_in_cell)))
     return math.tanh(const.rho_d_He*const.p_He*iHe_sigma*iOmega_pseud*t_in_cell)*math.tanh(-const.rho_d_He*const.p_He*iHe_sigma*(1+iOmega_zero*t_in_cell))
