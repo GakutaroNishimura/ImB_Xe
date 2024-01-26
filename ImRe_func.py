@@ -94,7 +94,7 @@ def Re_B131_1(E):
     # return 10**15*(3/(64*k)*(4*nGamma_2*(E-const.E_2+Gamma_2*k*const.R_0)/((E-const.E_2)**2+(Gamma_2/2)**2)))
     # return 10**15*(3/(64*k)*(4*nGamma_0*(E-const.E_0+Gamma_0*k*const.R_0)/((E-const.E_0)**2+(Gamma_0/2)**2)))
     return 10**15*(3/(64*k)*(4*nGamma_2*(E-const.E_2+Gamma_2*k*const.R_0)/((E-const.E_2)**2+(Gamma_2/2)**2) - 4*nGamma_0*(E-const.E_0+Gamma_0*k*const.R_0)/((E-const.E_0)**2+(Gamma_0/2)**2)))
-    # return 10**15*(3/(64*k)*(7*nGamma_1*(E-const.E_1)/((E-const.E_1)**2+(Gamma_1/2)**2)))
+    # return 10**15*(3/(64*k)*(-7*nGamma_1*(E-const.E_1)/((E-const.E_1)**2+(Gamma_1/2)**2)))
 
 # Omega is in [Hz]
 def Omega_pseud(E, Xe_partial_pressure):
@@ -129,6 +129,11 @@ def Omega_prime(E, B_0, Pol129):
 
 def Omega_prime131(E, B_0, Pol131):
     iRe_B = Re_B131(E)
+    iRe_B = iRe_B/10**15
+    return ((2*np.pi*const.h_bar*const.num_131*const.c**2)/const.m_N)*(Pol131*iRe_B-(const.mu_N*const.m_N*B_0)/(4*np.pi*const.h_bar**2*const.num_131*const.c**2))
+
+def Omega_prime131_1(E, B_0, Pol131):
+    iRe_B = Re_B131_1(E)
     iRe_B = iRe_B/10**15
     return ((2*np.pi*const.h_bar*const.num_131*const.c**2)/const.m_N)*(Pol131*iRe_B-(const.mu_N*const.m_N*B_0)/(4*np.pi*const.h_bar**2*const.num_131*const.c**2))
     
@@ -238,15 +243,17 @@ def Tasymm_analyzer2_1(E, PolXe, B_0, Xe_partial_pressure, Xe_d_cell):
     return math.tanh(const.rho_d_He*const.p_He*iHe_sigma*iOmega_pseud*t_in_cell)*math.tanh(-const.rho_d_He*const.p_He*iHe_sigma*(1+iOmega_zero*t_in_cell))
 
 
-def NafterAnalyzer(E, PolXe, B_0, Xe_partial_pressure):
-    t_in_cell = const.d_cell/(437.4*math.sqrt(E*10**3))
+def NafterAnalyzer(E, PolXe, B_0, Xe_partial_pressure, d_cell):
+    NbeforeAnalyzer = 7.6674*10**(10)*1.3**2*np.pi*(0.1**2/14.5**2)
+    print(NbeforeAnalyzer)
+    t_in_cell = d_cell/(437.4*math.sqrt(E*10**3))
     He_sigma = (5.185734e+02 + 4.870487e+02 + 4.667582e+02 + 4.446920e+02)/10**28/4
     Xe_sigma = (4.522267e+01 + 4.533637e+01 + 4.552900e+01 + 4.596839e+01 + 4.628790e+01 + 4.629664e+01 + 4.616289e+01 + 4.575966e+01 + 4.562674e+01 + 4.590330e+01)/10**28/10
     num_Xe = Xe_partial_pressure*5.88*10**3*6.02*10**23/131.3
     iOmega_pseud = PolXe*Omega_pseud131(E, Xe_partial_pressure)
     iOmega_zero = Omega_zero(B_0)
 
-    return math.exp(-num_Xe*Xe_sigma*const.d_cell-2*const.rho_d_He*He_sigma)*math.cosh(const.rho_d_He*const.p_He*He_sigma*(1+math.sin(iOmega_pseud+iOmega_zero)*t_in_cell))
+    return NbeforeAnalyzer*math.exp(-num_Xe*Xe_sigma*d_cell-2*const.rho_d_He*He_sigma)*math.cosh(const.rho_d_He*const.p_He*He_sigma*(1+math.sin(iOmega_pseud+iOmega_zero)*t_in_cell))
 
 
 def N100Pol(E, PolXe, Xe_partial_pressure):
