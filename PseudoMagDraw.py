@@ -15,8 +15,8 @@ Pol131 = 0.04*10**(-2)
 # Pol131 = 7.6*10**(-2) #Mike
 # Pol131 = 1.0
 #x = np.linspace(10*10**(-3), 10.0, 10000)
-# x = np.linspace(2.0, 20.0, 10000)
-x = np.linspace(5.0, 14.0, 10000)
+x = np.linspace(2.0, 20.0, 10000)
+# x = np.linspace(5.0, 14.0, 10000)
 # x = np.linspace(1.2, 5.2, 10000)
 d = np.linspace(0.0, 30.0, 10000)
 iB = np.linspace(-0.1, 0.1, 10000)
@@ -49,13 +49,13 @@ Nlist = []
 #     iA_s = func.Tasymm_analyzer(ix, Pol129, B_0, 3.0*0.264, 0.05)
 #     A_s_nat.append(iA_s)
 
-for ix in x:
-    iA_s = func.Tasymm_analyzer2(ix, Pol129, B_0, 1.0, const.d_cell)
-    A_s_enrich2.append(iA_s)
-
 # for ix in x:
-#     iA_s = func.Tasymm_analyzer2(ix, Pol131, B_0, 3.0*0.212, const.d_cell)
-#     A_s_nat2.append(iA_s)
+#     iA_s = func.Tasymm_analyzer2(ix, Pol129, B_0, 1.0, const.d_cell)
+#     A_s_enrich2.append(iA_s)
+
+for ix in x:
+    iA_s = func.Tasymm_analyzer2(ix, Pol131, B_0, 3.0*0.212, const.d_cell)
+    A_s_nat2.append(iA_s)
 
 # for ix in x:
 #     iA_s = func.Tasymm_analyzer2_1(ix, Pol131, B_0, 3.0*0.212, const.d_cell)
@@ -141,11 +141,11 @@ fig, ax = plt.subplots()
 #ax.plot(x, A_s_rate, label="rate")
 # ax.plot(x, A_s_enrich, label="129 enrich : 1 atm 10 cm")
 # ax.plot(x, A_s_enrich)
-ax.plot(x, A_s_enrich2)
+# ax.plot(x, A_s_enrich2)
 #ax.plot(x, A_s_enrich, label="129 enrich : 1% pol")
 #ax.plot(x, A_s_enrich1, label="129 enrich : 2% pol")
 # ax.plot(x, A_s_nat, label="natural : 3 atm 5 cm")
-# ax.plot(x, A_s_nat2)
+ax.plot(x, A_s_nat2)
 # ax.plot(x, A_s_Npol100)
 # ax.plot(x, A_s_Mike0, label=r"$d_{\mathrm{Xe}}$ = 0 cm")
 # ax.plot(x, A_s_Mike1, label=r"$d_{\mathrm{Xe}}$ = 5 cm")
